@@ -3,8 +3,7 @@ vim.g.mapleader = " "
 
 -- Better nav
 map({ "n", "v", "x" }, ";", ":")
-map({ "n", "v", "x" }, "<leader>e", "<cmd>Ex<CR>")
-map({ "n", "v", "x" }, "<leader><leader>", "<leader>ff", { remap = true })
+map({ "n", "v", "x" }, "<leader><leader>", "<leader>ff", { remap = true, desc = "open files" })
 map("i", "jk", "<Esc>")
 
 -- Windows
@@ -23,9 +22,6 @@ map({ "i", "n", "v" }, "<C-s>", "<cmd>w<CR>")
 
 -- Clear search and stop snippet on escape
 map({ "i", "n", "s" }, "<esc>", function()
-  vim.cmd("noh")
-  return "<esc>"
+	vim.cmd("noh")
+	return "<esc>"
 end, { expr = true, desc = "Escape and Clear hlsearch" })
-
--- terminal exit
-map("t", "<Esc><Esc>", "<C-\\><C-n>")

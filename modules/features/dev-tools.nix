@@ -20,7 +20,7 @@
       
       go
       bun
-      python3
+      (python3.withPackages (ps: [ ps.debugpy ]))
       zig
       clang
       sqlite
@@ -35,6 +35,8 @@
       gopls
       golangci-lint
       rust-analyzer
+      lldb
+      delve
       basedpyright
       ruff
       clang-tools

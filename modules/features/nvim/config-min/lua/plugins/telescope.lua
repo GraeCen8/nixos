@@ -1,5 +1,3 @@
-local builtin = require('telescope.builtin')
-
 return {
   {
     "nvim-telescope/telescope.nvim",
@@ -9,12 +7,12 @@ return {
     },
     cmd = "Telescope",
     keys = {
-      { "<leader>ff", builtin.find_files,  desc = "Find files" },
-      { "<leader>/",  builtin.live_grep,   desc = "Live grep" },
-      { "<leader>fb", builtin.buffers,     desc = "Buffers" },
-      { "<leader>fh", builtin.help_tags,   desc = "Help tags" },
-      { "<leader>fg", builtin.git_files,   desc = "Git files" },
-      { "<leader>fd", builtin.diagnostics, desc = "Diagnostics" }
+      { "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "Find files" },
+      { "<leader>/", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
+      { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
+      { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Help tags" },
+      { "<leader>fg", "<cmd>Telescope git_files<CR>", desc = "Git files" },
+      { "<leader>fd", "<cmd>Telescope diagnostics<CR>", desc = "Diagnostics" },
     },
     opts = {
       defaults = {
