@@ -5,7 +5,7 @@
     theme = themes.${config.system.theme.name};
     c = theme.colors;
 
-    waybarMango = pkgs.waybar.overrideAttrs (old: {
+    waybarRaw = pkgs.waybar.overrideAttrs (old: {
       version = "0.15.0";
       src = pkgs.fetchFromGitHub {
         owner = "Alexays";
@@ -19,6 +19,18 @@
         "-Dwwan=disabled"
       ];
     });
+
+    waybarMango = pkgs.runCommand "waybar" {
+      meta.mainProgram = "waybar";
+    } ''
+      mkdir -p $out/bin
+      cat > $out/bin/waybar <<WRAPPER
+      #!${pkgs.runtimeShell}
+      exec ${myWaybar}/bin/my-waybar
+      WRAPPER
+      chmod +x $out/bin/waybar
+      ln -s ${waybarRaw}/bin/waybar $out/bin/waybar-raw
+    '';
 
     mediaScripts = pkgs.stdenv.mkDerivation {
       name = "waybar-media-scripts";
@@ -186,14 +198,14 @@
 
       outputs="$(mmsg get all-monitors 2>/dev/null || true)"
       if [ -z "$outputs" ]; then
-        exec "${waybarMango}/bin/waybar"
+        exec "${waybarRaw}/bin/waybar"
       fi
 
       primary="$(printf '%s' "$outputs" | "${pkgs.jq}/bin/jq" -r '.monitors[0].name' 2>/dev/null || true)"
       primary_w="$(printf '%s' "$outputs" | "${pkgs.jq}/bin/jq" -r '.monitors[0].width / .monitors[0].scale' 2>/dev/null || true)"
 
       if [ -z "$primary_w" ] || [ "$primary_w" = "null" ]; then
-        exec "${waybarMango}/bin/waybar"
+        exec "${waybarRaw}/bin/waybar"
       fi
 
       ui_scale="$(awk -v w="$primary_w" -v r="$REFERENCE" 'BEGIN { printf "%.2f", w / r }')"
@@ -201,7 +213,7 @@
       if ! printf '%s' "$outputs" | "${pkgs.jq}/bin/jq" --argjson frac "$FRACTION" --slurpfile base <(cat "$BASE_CONF") '
           [ .monitors[] | . as $m | ((($m.width / $m.scale) * (1 - $frac) / 2) | round) as $mr | $base[0] * { output: $m.name, margin: ("0 \($mr) 0 \($mr)") } ]
         ' > "$GEN_CONF" 2>/dev/null; then
-        exec "${waybarMango}/bin/waybar"
+        exec "${waybarRaw}/bin/waybar"
       fi
 
       font_size="$(awk -v s="$ui_scale" 'BEGIN { printf "%.0f", 11 * s }')"
@@ -221,7 +233,7 @@
       tooltip { border-radius: ''${tooltip_r}px; }
       EOF
 
-      exec "${waybarMango}/bin/waybar" -c "$GEN_CONF" -s "$GEN_CSS"
+      exec "${waybarRaw}/bin/waybar" -c "$GEN_CONF" -s "$GEN_CSS"
     '';
   in {
     options.programs.waybar = {

@@ -29,6 +29,8 @@ opencode is used for agents. and there is a AGENTS.md file in the config
 
 read niri keybinds that show at startup for niri keybindings
 
+there are  multiple nvim  configs  which you can swap between in configuration.nix per host 
+
 ## themes
 
 there are many themes you can use like:
