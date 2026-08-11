@@ -5,6 +5,7 @@
 }: {
   flake.nixosModules.lock = {
     pkgs,
+    lib,
     config,
     ...
   }: let
@@ -12,82 +13,141 @@
     theme = themes.${config.system.theme.name};
     c = theme.colors;
 
-    swaylockConf = pkgs.writeText "swaylock-config" ''
-      daemonize
-      show-failed-attempts
-      indicator-caps-lock
+    hexDigit = ch: let
+      o = lib.strings.charToInt ch;
+    in
+      if o >= 48 && o <= 57 then o - 48
+      else if o >= 65 && o <= 70 then o - 55
+      else if o >= 97 && o <= 102 then o - 87
+      else throw "invalid hex digit: ${ch}";
 
-      effect-blur 7x5
-      effect-vignette 0.5
+    hexToInt = str: let
+      chars = lib.strings.stringToCharacters str;
+    in (hexDigit (builtins.elemAt chars 0)) * 16 + (hexDigit (builtins.elemAt chars 1));
 
-      color=${c.bg}
+    toRgba = hex: alpha: let
+      h = lib.removePrefix "#" hex;
+      r = hexToInt (lib.substring 0 2 h);
+      g = hexToInt (lib.substring 2 2 h);
+      b = hexToInt (lib.substring 4 2 h);
+    in "rgba(${toString r}, ${toString g}, ${toString b}, ${toString alpha})";
 
-      inside-color=${c.bg}
-      inside-ver-color=${c.bg-alt}
-      inside-wrong-color=${c.error}
-      inside-clear-color=${c.bg-alt}
+    hyprlockConf = pkgs.writeText "hyprlock.conf" ''
+      general {
+          fractional_scaling = 2
+          screencopy_mode = 1
+      }
 
-      ring-color=${c.border}
-      ring-ver-color=${c.accent}
-      ring-wrong-color=${c.error}
-      ring-clear-color=${c.border-active}
+      background {
+          monitor =
+          path = screenshot
+          color = rgb(0,0,0)
 
-      line-color=${c.bg}
-      line-ver-color=${c.accent}
-      line-wrong-color=${c.error}
-      line-clear-color=${c.border-active}
+          blur_size = 6
+          blur_passes = 3
+          noise = 0.0117
+          contrast = 1.3000
+          brightness = 0.6000
+          vibrancy = 0.2100
+          vibrancy_darkness = 0.0
+      }
 
-      text-color=${c.fg}
-      text-ver-color=${c.accent}
-      text-wrong-color=${c.error}
-      text-clear-color=${c.fg}
+      # Hours
+      label {
+          monitor =
+          text = cmd[update:1000] echo "<b><big> $(date +"%H") </big></b>"
+          color = ${toRgba c.fg 1.0}
+          font_size = 112
+          font_family = "${themes.font.family}"
+          shadow_passes = 0
+          shadow_size = 0
 
-      key-hl-color=${c.accent}
-      bs-hl-color=${c.error}
+          position = 0, 220
+          halign = center
+          valign = center
+      }
 
-      font=${themes.font.family}
-      font-size=14
+      # Minutes
+      label {
+          monitor =
+          text = cmd[update:1000] echo "<b><big> $(date +"%M") </big></b>"
+          color = ${toRgba c.fg 1.0}
+          font_size = 112
+          font_family = "${themes.font.family}"
+          shadow_passes = 0
+          shadow_size = 0
 
-      indicator-radius=80
-      indicator-thickness=8
+          position = 0, 80
+          halign = center
+          valign = center
+      }
 
-      separator-color=${c.border}
+      # Day
+      label {
+          monitor =
+          text = cmd[update:18000000] echo "<b><big> $(date +'%A') </big></b>"
+          color = ${toRgba c.fg-dim 1.0}
+          font_size = 18
+          font_family = "${themes.font.family}"
+
+          position = 0, -15
+          halign = center
+          valign = center
+      }
+
+      # Date
+      label {
+          monitor =
+          text = cmd[update:18000000] echo "<b> $(date +'%d %b') </b>"
+          color = ${toRgba c.fg-dim 1.0}
+          font_size = 14
+          font_family = "${themes.font.family}"
+
+          position = 0, -40
+          halign = center
+          valign = center
+      }
+
+      input-field {
+          monitor =
+          size = 250, 50
+          outline_thickness = 3
+
+          dots_size = 0.26
+          dots_spacing = 0.64
+          dots_center = true
+          dots_rounding = -1
+
+          rounding = 22
+          outer_color = ${toRgba c.accent 1.0}
+          inner_color = ${toRgba c.bg-alt 0.5}
+          font_color = ${toRgba c.fg 1.0}
+          check_color = ${toRgba c.success 1.0}
+          fail_color = ${toRgba c.error 1.0}
+          capslock_color = ${toRgba c.warning 1.0}
+          fade_on_empty = true
+          placeholder_text = <i>Password...</i>
+          fail_text = <i>Invalid Password!</i>
+          check_text = <i>✓</i>
+
+          position = 0, 120
+          halign = center
+          valign = bottom
+      }
     '';
 
     lockScript = pkgs.writeShellScriptBin "lock-screen" ''
-      tmp=$(mktemp -d)
-      images=()
-
-      outputs=$(${pkgs.gnused}/bin/sed -n 's/^\([^ ]\+\) ".*"/\1/p' < <(${pkgs.wlr-randr}/bin/wlr-randr 2>/dev/null) || true)
-      if [ -n "$outputs" ]; then
-        while IFS= read -r o; do
-          [ -z "$o" ] && continue
-          if ${pkgs.grim}/bin/grim -o "$o" "$tmp/$o.png" 2>/dev/null; then
-            images+=(--image "$o:$tmp/$o.png")
-          fi
-        done <<< "$outputs"
-      fi
-
-      if [ "''${#images[@]}" -eq 0 ] && ${pkgs.grim}/bin/grim "$tmp/screen.png" 2>/dev/null; then
-        images+=(--image "$tmp/screen.png")
-      fi
-
-      if [ "''${#images[@]}" -gt 0 ]; then
-        ${pkgs.swaylock-effects}/bin/swaylock --config ${swaylockConf} "''${images[@]}"
-        ( while ${pkgs.procps}/bin/pgrep -x swaylock >/dev/null 2>&1; do sleep 1; done; rm -rf "$tmp" ) &
-      else
-        rm -rf "$tmp"
-        exec ${pkgs.swaylock-effects}/bin/swaylock --config ${swaylockConf}
-      fi
+      exec ${pkgs.hyprlock}/bin/hyprlock
     '';
   in {
-    security.pam.services.swaylock = {};
+    security.pam.services.hyprlock = {};
 
     environment.systemPackages = [
-      pkgs.swaylock-effects
-      pkgs.wlr-randr
+      pkgs.hyprlock
       lockScript
     ];
+
+    environment.etc."xdg/hypr/hyprlock.conf".source = hyprlockConf;
 
     systemd.services.lock-on-suspend = {
       enable = true;

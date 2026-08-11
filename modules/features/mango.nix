@@ -125,6 +125,9 @@
               "name:^${mangoNvidiaOutput}$,vrr:1"
             ];
 
+            # tag direction 
+            tag_animation_direction = 0;
+
             bind = [
               # Launch
               "SUPER,Return,spawn,alacritty"
