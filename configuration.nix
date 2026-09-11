@@ -22,7 +22,7 @@
     windowManager.qtile.enable = true;
     windowManager.oxwm.enable = true;
     displayManager.sessionCommands = ''
-      xwallpaper --zoom ~/nix/walls/wall1.png
+      ${pkgs.xwallpaper}/bin/xwallpaper --zoom /home/grae/nix/walls/wall1.png
     '';
     extraConfig = ''
       	Section "Monitor"
@@ -34,8 +34,9 @@
 
   services.picom.enable = true;
 
-  users.users.tony = {
+  users.users.grae = {
     isNormalUser = true;
+    initialPassword = "qwe";
     extraGroups = [ "wheel" ];
     packages = with pkgs; [
       tree
@@ -50,7 +51,7 @@
     wget
     git
     alacritty
-    ghossty
+    ghostty
   ];
 
   fonts.packages = with pkgs; [

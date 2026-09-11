@@ -12,12 +12,13 @@ let
     alacritty = "alacritty";
     picom = "picom";
     ghostty = "ghostty";
+    oxwm = "oxwm";
   };
 in
 
 {
-  home.username = "tony";
-  home.homeDirectory = "/home/tony";
+  home.username = "grae";
+  home.homeDirectory = "/home/grae";
   programs.git.enable = true;
   home.stateVersion = "25.05";
   programs.bash = {

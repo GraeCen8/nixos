@@ -7,7 +7,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     oxwm = {
       url = "github:tonybanters/oxwm";
-      inputs.nixpkg.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -24,7 +24,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.tony = import ./home.nix;
+            home-manager.users.grae = import ./home.nix;
             home-manager.backupFileExtension = "backup";
           }
         ];
