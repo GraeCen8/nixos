@@ -155,9 +155,17 @@ eff() {
 
 # --- system (ported from fish conf.d/functions-system.fish) ---
 nrs() {
-  local hostname="$1"
-  [[ "$hostname" == :* ]] && hostname="#${hostname#:}"
-  bash -c "sudo nixos-rebuild switch --flake /home/grae/nixos$hostname |& nom"
+  local flake=/home/grae/nix
+  local host=nixos-btw
+  local args=()
+  for arg in "$@"; do
+    if [[ "$arg" == :* ]]; then
+      host="${arg#:}"
+    else
+      args+=("$arg")
+    fi
+  done
+  noglob bash -c "sudo nixos-rebuild switch --impure ${args[*]} --flake $flake#$host"
 }
 
 qmk-swap() {
