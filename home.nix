@@ -12,7 +12,11 @@ in
 {
   home.username = "grae";
   home.homeDirectory = "/home/grae";
-  programs.git.enable = true;
+  programs.git = {
+    enable = true;
+    extraConfig.credential."https://github.com".helper =
+      "!f() { gh auth git-credential \"$@\"; }; f";
+  };
   home.stateVersion = "25.05";
 
   home.file.".zshenv".text = "export ZDOTDIR=\"$HOME/.config/zsh\"";
@@ -39,13 +43,17 @@ in
     nil
     taplo
     nixpkgs-fmt
+    opencode
+    lazygit
     nodejs
-    gcc
     rofi
     xwallpaper
     fzf
     zoxide
     eza
+    github-cli
+    clang
+    clang-tools
   ];
 
 }
