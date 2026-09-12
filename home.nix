@@ -43,6 +43,7 @@ in
     gcc
     rofi
     xwallpaper
+    fzf
     zoxide
     eza
   ];

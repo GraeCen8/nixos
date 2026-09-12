@@ -8,6 +8,7 @@ autoload -U compinit && compinit
 autoload -U colors && colors
 # autoload -U tetris # main attraction of zsh, obviously
 
+alias nix='noglob nix'
 
 # cmp opts
 zstyle ':completion:*' menu select # tab opens cmp menu
@@ -122,6 +123,7 @@ alias grep='rg'
 alias find='fd'
 
 # Directories
+alias clear='clear && ls'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
