@@ -1,7 +1,7 @@
 local oxwm = oxwm
 
 local modkey = "Mod4"
-local terminal = "alacritty"
+local terminal = "st"
 
 local colors = {
     bg = "#191724",
@@ -17,8 +17,8 @@ local colors = {
     grey = "#6e6a86",
     sep = "#26233a",
 }
-local tags = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
--- local tags = { "", "󰊯", "", "󰰏", "󰟿", "󱇤", "", "󱘶", "󰧮" } -- Example of nerd font icon tags
+-- local tags = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
+local tags = { "", "󰊯", "󱘶", "󰧮" }
 
 local bar_font = "JetBrainsMono Nerd Font Propo:style=Bold:size=12"
 
@@ -104,10 +104,11 @@ oxwm.bar.set_scheme_occupied(colors.blue, colors.bg, colors.cyan)
 oxwm.bar.set_scheme_selected(colors.blue, colors.bg, colors.purple)
 
 oxwm.key.bind({ modkey }, "Return", oxwm.spawn_terminal())
+oxwm.key.bind({modkey}, "Tab", oxwm.spawn({"sh", "-c", "qutebrowser"}))
 -- oxwm.key.bind({ modkey }, "D", oxwm.spawn({ "sh", "-c", "dmenu_run -l 10" }))
 oxwm.key.bind({ modkey }, "D", oxwm.spawn({ "sh", "-c", "rofi -show drun" }))
 oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "sh", "-c", "maim -s | xclip -selection clipboard -t image/png" }))
-oxwm.key.bind({ modkey }, "Q", oxwm.client.kill())
+oxwm.key.bind({ modkey }, "W", oxwm.client.kill())
 
 oxwm.key.bind({ modkey, "Shift" }, "Slash", oxwm.show_keybinds())
 

@@ -4,16 +4,9 @@ let
   dotfiles = "${config.home.homeDirectory}/nix/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
 
-  # Standard .config/directory
-  configs = {
-    qtile = "qtile";
-    nvim = "nvim";
-    rofi = "rofi";
-    alacritty = "alacritty";
-    picom = "picom";
-    ghostty = "ghostty";
-    oxwm = "oxwm";
-  };
+  # Auto-generate from folders in the dotfiles directory
+  configs = pkgs.lib.filterAttrs (name: type: type == "directory")
+    (builtins.readDir dotfiles);
 in
 
 {
@@ -21,33 +14,37 @@ in
   home.homeDirectory = "/home/grae";
   programs.git.enable = true;
   home.stateVersion = "25.05";
-  programs.bash = {
-    enable = true;
-    shellAliases = {
-      btw = "echo i use nixos-btw";
-      nrs = "sudo nixos-rebuild switch --flake ~/nix#nixos-btw";
-    };
-    initExtra = ''
-      	  export PS1="\[\e[38;5;75m\]\u@\h \[\e[38;5;113m\]\w \[\e[38;5;189m\]\$ \[\e[0m\]"
-      	'';
-  };
+
+  home.file.".zshenv".text = "export ZDOTDIR=\"$HOME/.config/zsh\"";
 
   xdg.configFile = builtins.mapAttrs
-    (name: subpath: {
-      source = create_symlink "${dotfiles}/${subpath}";
+    (name: _: {
+      source = create_symlink "${dotfiles}/${name}";
       recursive = true;
     })
     configs;
 
   home.packages = with pkgs; [
+    (pkgs.st.overrideAttrs (old: {
+      src = ./config/st;
+      patches = [ ];
+      preBuild = "make clean";
+      buildInputs = old.buildInputs ++ [ pkgs.harfbuzz ];
+    }))
+
     neovim
+    helix
     ripgrep
+    localsend
     nil
+    taplo
     nixpkgs-fmt
     nodejs
     gcc
     rofi
     xwallpaper
+    zoxide
+    eza
   ];
 
 }

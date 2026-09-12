@@ -1,11 +1,5 @@
-{ config, lib, pkgs, ... }:
-
-{
-  imports =
-    [
-      ./hardware-configuration.nix
-    ];
-
+{ config, lib, pkgs, ... }: {
+  imports = [ ./hardware-configuration.nix ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -13,13 +7,14 @@
   networking.networkmanager.enable = true;
 
   time.timeZone = "America/Los_Angeles";
-
+  programs.zsh.enable = true;
+  environment.sessionVariables.TERMINAL = "st";
   services.displayManager.ly.enable = true;
   services.xserver = {
     enable = true;
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
-    windowManager.qtile.enable = true;
+    # windowManager.qtile.enable = true;
     windowManager.oxwm.enable = true;
     displayManager.sessionCommands = ''
       ${pkgs.xwallpaper}/bin/xwallpaper --zoom /home/grae/nix/walls/wall1.png
@@ -34,24 +29,28 @@
 
   services.picom.enable = true;
 
+  # Stop systemd-gpt-auto-generator from using /dev/sda2 as swap
+  # (no valid swap filesystem is set up on this VM disk).
+  systemd.generators.systemd-gpt-auto-generator = "/dev/null";
+
   users.users.grae = {
     isNormalUser = true;
     initialPassword = "qwe";
+    shell = pkgs.zsh;
     extraGroups = [ "wheel" ];
     packages = with pkgs; [
       tree
     ];
   };
 
-  programs.firefox.enable = true;
-
   environment.systemPackages = with pkgs; [
     qutebrowser
     vim
     wget
     git
-    alacritty
-    ghostty
+    lazygit
+    tmux
+    starship
   ];
 
   fonts.packages = with pkgs; [

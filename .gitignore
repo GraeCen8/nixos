@@ -1,1 +1,5 @@
-hardware-configuration.nix
+config/st/st
+config/st/*.o
+config/st/hb.o
+config/st/x.o
+config/st/st.o

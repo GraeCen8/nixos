@@ -6,22 +6,14 @@ end
 
 return {
     {
-        "folke/tokyonight.nvim",
+        "rose-pine/neovim",
+        name = "rose-pine",
         config = function()
-            vim.cmd.colorscheme "tokyonight"
+            require("rose-pine").setup()
+            vim.cmd.colorscheme "rose-pine"
             vim.cmd('hi Directory guibg=NONE')
             vim.cmd('hi SignColumn guibg=NONE')
             enable_transparency()
         end
     },
-    -- {
-    --     "Mofiqul/vscode.nvim",
-    --     name = 'vscode',
-    --     config = function()
-    --         vim.cmd.colorscheme "vscode"
-    --         vim.cmd('hi Directory guibg=NONE')
-    --         vim.cmd('hi SignColumn guibg=NONE')
-    --         enable_transparency()
-    --     end
-    -- }
 }

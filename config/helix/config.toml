@@ -1,0 +1,29 @@
+theme = "rose_pine"
+
+[editor]
+trim-trailing-whitespace = true
+insert-final-newline = true
+end-of-line-diagnostics = "hint"
+auto-format = true
+auto-save = true
+scrolloff = 15
+completion-replace = true
+
+[editor.soft-wrap]
+enable = true
+
+[editor.lsp]
+snippets = true
+
+[keys.normal]
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+"-" = "command_mode"
+"A-f" = ":format"
+
+[keys.insert.j]
+k = "normal_mode"
+"C-space" = "delete_word_backward"
+
+[keys.normal.space]
+x = ":buffer-close"
+o = ":buffer-close-others"
