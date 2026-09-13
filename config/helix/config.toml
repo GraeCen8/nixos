@@ -15,6 +15,9 @@ enable = true
 [editor.lsp]
 snippets = true
 
+[editor.cursor-shape]
+insert = "bar"
+
 [keys.normal]
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 "-" = "command_mode"

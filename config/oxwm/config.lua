@@ -202,7 +202,5 @@ oxwm.key.chord({
 
 -- Autostart
 
--- oxwm.autostart("picom")
--- oxwm.autostart("xwallpaper --zoom ~/walls/dune.jpg")
--- oxwm.autostart("dunst")
--- oxwm.autostart("nm-applet")
+oxwm.autostart("st")
+oxwm.autostart("qutebrowser")
