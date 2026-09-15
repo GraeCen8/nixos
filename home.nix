@@ -66,6 +66,7 @@ in
     lazygit
     nodejs
     rofi
+    xdotool
     xwallpaper
     fzf
     zoxide
