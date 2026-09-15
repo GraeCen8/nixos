@@ -6,7 +6,7 @@
   networking.hostName = "nixos-btw";
   networking.networkmanager.enable = true;
 
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "Europe/London";
   programs.zsh.enable = true;
   programs.dconf.enable = true;
   environment.sessionVariables.TERMINAL = "st";
