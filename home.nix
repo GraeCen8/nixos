@@ -21,6 +21,25 @@ in
 
   home.file.".zshenv".text = "export ZDOTDIR=\"$HOME/.config/zsh\"";
 
+  gtk = {
+    enable = true;
+    colorScheme = "dark";
+    theme = {
+      name = "rose-pine";
+      package = pkgs.rose-pine-gtk-theme;
+    };
+    iconTheme = {
+      name = "rose-pine";
+      package = pkgs.rose-pine-icon-theme;
+    };
+    cursorTheme = {
+      name = "rose-pine-cursor";
+      package = pkgs.rose-pine-cursor;
+      size = 24;
+    };
+    gtk4.theme = config.gtk.theme;
+  };
+
   xdg.configFile = builtins.mapAttrs
     (name: _: {
       source = create_symlink "${dotfiles}/${name}";
