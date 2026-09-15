@@ -8,6 +8,7 @@
 
   time.timeZone = "America/Los_Angeles";
   programs.zsh.enable = true;
+  programs.dconf.enable = true;
   environment.sessionVariables.TERMINAL = "st";
   services.displayManager.ly.enable = true;
   services.xserver = {
