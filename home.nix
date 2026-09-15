@@ -52,6 +52,7 @@ in
     zoxide
     eza
     github-cli
+    dunst
     clang
     clang-tools
   ];
