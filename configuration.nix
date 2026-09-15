@@ -51,6 +51,9 @@
     git
     lazygit
     tmux
+    pcmanfm
+    btop
+    fastfetch
     starship
   ];
 
