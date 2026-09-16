@@ -17,14 +17,14 @@
     indicate_hidden = yes
     transparency = 0
     separator_height = 2
-    padding = 8
-    horizontal_padding = 8
+    padding = 4
+    horizontal_padding = 4
     text_icon_padding = 0
     frame_width = 3
     frame_color = "#26233a"
     separator_color = frame
     sort = yes
-    font = JetBrainsMono Nerd Font 10
+    font = JetBrainsMono Nerd Font 12
     line_height = 0
     markup = full
     format = "<b>%s</b>\n%b"

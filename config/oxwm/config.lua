@@ -23,6 +23,7 @@ local tags = { "", "󰊯", "󱘶", "󰧮", "", "", "", "", "", "" }
 local bar_font = "JetBrainsMono Nerd Font Propo:style=Bold:size=12"
 
 local blocks = {
+    -- Kernel
     oxwm.bar.block.shell({
         format = " {}",
         command = "uname -r",
@@ -30,24 +31,53 @@ local blocks = {
         color = colors.red,
         underline = true,
     }),
-    oxwm.bar.block.static({
-        text = "│",
-        interval = 999999999,
-        color = colors.sep,
-        underline = false,
-    }),
+    -- Separator + RAM
+    oxwm.bar.block.static({text = "│", interval = 999999999, color = colors.orange, underline = false}),
     oxwm.bar.block.ram({
         format = "󰍛 Ram: {used}/{total} GB",
         interval = 5,
-        color = colors.green,
+        color = colors.yellow,
         underline = true,
     }),
-    oxwm.bar.block.static({
-        text = "│",
-        interval = 999999999,
-        color = colors.sep,
-        underline = false,
+    -- Separator + CPU
+    oxwm.bar.block.static({text = "│", interval = 999999999, color = colors.purple, underline = false}),
+    oxwm.bar.block.shell({
+        format = "CPU: {}%",
+        command = [[top -bn1 | grep '%Cpu' | awk '{print 100-$8}' | awk -F. '{print $1}']],
+        interval = 3,
+        color = colors.cyan,
+        underline = true,
     }),
+    -- Separator + VOL
+    oxwm.bar.block.static({text = "│", interval = 999999999, color = colors.blue, underline = false}),
+    oxwm.bar.block.shell({
+        format = "VOL: {}%",
+        command = [[pamixer --get-volume]],
+        interval = 2,
+        color = colors.orange,
+        underline = true,
+    }),
+    -- Separator + BAT
+    oxwm.bar.block.static({text = "│", interval = 999999999, color = colors.green, underline = false}),
+    oxwm.bar.block.shell({
+        format = "BAT: {}%",
+        command = "cat /sys/class/power_supply/BAT1/capacity",
+        interval = 10,
+        color = colors.blue,
+        underline = true,
+    }),
+    -- Separator + BATTERY SMART
+    oxwm.bar.block.static({text = "│", interval = 999999999, color = colors.light_blue, underline = false}),
+    oxwm.bar.block.battery({
+        format = "Bat: {}%",
+        charging = "⚡ Bat: {}%",
+        discharging = "- Bat: {}%",
+        full = "✓ Bat: {}%",
+        interval = 30,
+        color = colors.grey,
+        underline = true,
+    }),
+    -- TIME (rightmost)
     oxwm.bar.block.datetime({
         format = "󰸘 {}",
         date_format = "%a, %b %d - %-I:%M %P",
@@ -55,28 +85,47 @@ local blocks = {
         color = colors.red,
         underline = true,
     }),
-    oxwm.bar.block.static({
-        text = "│",
-        interval = 999999999,
-        color = colors.sep,
-        underline = false,
-    }),
-    oxwm.bar.block.systray({
-    }),
-    oxwm.bar.block.battery({
-        format = "Bat: {}%",
-        charging = "⚡ Bat: {}%",
-        discharging = "- Bat: {}%",
-        full = "✓ Bat: {}%",
-        interval = 30,
-        color = colors.green,
-        underline = true,
-    }),
 };
 
 oxwm.set_terminal(terminal)
 oxwm.set_modkey(modkey)
 oxwm.set_tags(tags)
+
+-- BRIGHTNESS FUNCTIONS
+
+local function get_current_brightness()
+    local handle = io.popen("xrandr --verbose | grep -m1 -i brightness | awk '{print $2}'")
+    local result = handle:read("*a")
+    handle:close()
+    local value = tonumber(result)
+    return value or 1.0
+end
+
+local function set_brightness(val)
+    os.execute("xrandr --output $(xrandr | grep ' connected' | awk '{print $1}' | head -n1) --brightness " .. val)
+end
+
+local function brightness_down()
+    local current = get_current_brightness()
+    local new_brightness = math.max(current * 0.9, 0.1)
+    set_brightness(new_brightness)
+end
+
+local function brightness_up()
+    local current = get_current_brightness()
+    local new_brightness = math.min(current * 1.1, 1.0)
+    set_brightness(new_brightness)
+end
+
+local function brightness_mute()
+    set_brightness(0.02)
+end
+
+oxwm.key.bind({}, "F1", function() os.execute("pamixer -t") end)          -- Mute/unmute
+oxwm.key.bind({}, "F2", function() os.execute("pamixer -d 5") end)         -- Volume down
+oxwm.key.bind({}, "F3", function() os.execute("pamixer -i 5") end)         -- Volume up
+oxwm.key.bind({}, "F4", brightness_down)
+oxwm.key.bind({}, "F5", brightness_up)
 
 -- Layouts
 oxwm.set_layout_symbol("tiling", "[T]")
@@ -109,7 +158,7 @@ oxwm.key.bind({modkey}, "Tab", oxwm.spawn({"sh", "-c", "qutebrowser"}))
 oxwm.key.bind({modkey}, "E", oxwm.spawn({"sh", "-c", "pcmanfm"}))
 -- oxwm.key.bind({ modkey }, "D", oxwm.spawn({ "sh", "-c", "dmenu_run -l 10" }))
 oxwm.key.bind({ modkey }, "Z", oxwm.spawn({ "sh", "-c", "rofi -show drun" }))
-oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "sh", "-c", "$HOME/.config/scripts/scratchpad.sh" }))
+oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "sh", "-c", "maim -s shot.png"}))
 oxwm.key.bind({ modkey }, "W", oxwm.client.kill())
 
 oxwm.key.bind({ modkey, "Shift" }, "Slash", oxwm.show_keybinds())

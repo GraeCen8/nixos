@@ -73,6 +73,7 @@ in
     rofi
     xdotool
     xwallpaper
+    maim
     imv
     mpv
     cliamp
@@ -86,6 +87,14 @@ in
     }))
     # Notification daemon
     dunst
+    # Brightness/screen control
+    brightnessctl
+    # Video processing etc
+    ffmpeg
+    # Audio volume tools
+    pulseaudio
+    pipewire
+    pamixer
   ];
 
 }
