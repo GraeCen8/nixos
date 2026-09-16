@@ -1,0 +1,9 @@
+inherits = "rose_pine"
+
+"ui.menu" = { fg = "text", bg = "surface" }
+"ui.menu.selected" = { fg = "base", bg = "iris", modifiers = ["bold"] }
+"ui.menu.scroll" = { fg = "muted", bg = "surface" }
+
+"markup.normal.completion" = { fg = "text" }
+"markup.heading.completion" = { fg = "iris", modifiers = ["bold"] }
+"markup.raw.inline.completin" = { fg = "foam" }

@@ -1,13 +1,17 @@
-theme = "rose_pine"
+theme = "grae"
 
 [editor]
 trim-trailing-whitespace = true
 insert-final-newline = true
 end-of-line-diagnostics = "hint"
 auto-format = true
-auto-save = true
 scrolloff = 15
 completion-replace = true
+bufferline = "always"
+
+[editor.auto-save.after-delay]
+enable = true
+timeout = 1000
 
 [editor.soft-wrap]
 enable = true
