@@ -48,33 +48,44 @@ in
     configs;
 
   home.packages = with pkgs; [
+    # Core utilities
+    bat
+    eza
+    fzf
+    ripgrep
+    zoxide
+    zathura
+    yazi
+    # Development tools
+    clang
+    clang-tools
+    nil
+    nodejs
+    nixpkgs-fmt
+    opencode
+    pi-coding-agent
+    taplo
+    neovim
+    helix
+    lazygit
+    github-cli
+    # Apps
+    rofi
+    xdotool
+    xwallpaper
+    imv
+    mpv
+    cliamp
+    localsend
+    # Terminal
     (pkgs.st.overrideAttrs (old: {
       src = ./config/st;
       patches = [ ];
       preBuild = "make clean";
       buildInputs = old.buildInputs ++ [ pkgs.harfbuzz ];
     }))
-
-    neovim
-    helix
-    ripgrep
-    localsend
-    nil
-    taplo
-    nixpkgs-fmt
-    opencode
-    lazygit
-    nodejs
-    rofi
-    xdotool
-    xwallpaper
-    fzf
-    zoxide
-    eza
-    github-cli
+    # Notification daemon
     dunst
-    clang
-    clang-tools
   ];
 
 }

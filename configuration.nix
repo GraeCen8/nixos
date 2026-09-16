@@ -45,16 +45,20 @@
   };
 
   environment.systemPackages = with pkgs; [
-    qutebrowser
-    vim
+    # Core utilities
     wget
     git
-    lazygit
+    vim
     tmux
-    pcmanfm
+    # System/Tools
+    lazygit
     btop
     fastfetch
     starship
+    # File Managers
+    pcmanfm
+    # Applications
+    qutebrowser
   ];
 
   fonts.packages = with pkgs; [
