@@ -1,4 +1,4 @@
-#files: 2060	version: 5.9.1
+#files: 2065	version: 5.9.1
 
 _comps=(
 '-' '_precommand'
@@ -104,6 +104,7 @@ _comps=(
 'basename' '_basename'
 'basenc' '_basenc'
 'bash' '_bash'
+'bat' '_bat'
 'batch' '_at'
 'baz' '_baz'
 'beadm' '_beadm'
@@ -977,6 +978,7 @@ _comps=(
 'mpc' '_mpc'
 'mplayer' '_mplayer'
 'mpstat' '_sysstat'
+'mpv' '_mpv'
 'mr' '_myrepos'
 'mrd' '_mtools'
 'mread' '_mtools'
@@ -1094,14 +1096,22 @@ _comps=(
 'otool' '_otool'
 'p4' '_perforce'
 'p4d' '_perforce'
+'pacat' '_pulseaudio'
 'pack' '_pack'
 'packf' '_mh'
+'pacmd' '_pulseaudio'
+'pactl' '_pulseaudio'
+'padsp' '_pulseaudio'
 'pandoc' '_pandoc'
 'papers' '_papers'
+'paplay' '_pulseaudio'
 '-parameter-' '_parameter'
+'parec' '_pulseaudio'
+'parecord' '_pulseaudio'
 'parsehdlist' '_urpmi'
 'passwd' '_users'
 'paste' '_paste'
+'pasuspender' '_pulseaudio'
 'patch' '_patch'
 'pax' '_pax'
 'pbcopy' '_pbcopy'
@@ -1234,6 +1244,7 @@ _comps=(
 'pswrap' '_postscript'
 'ptree' '_ptree'
 'ptx' '_ptx'
+'pulseaudio' '_pulseaudio'
 'pump' '_pump'
 'pushd' '_cd'
 'putclip' '_putclip'
@@ -1846,6 +1857,7 @@ _comps=(
 'yash' '_sh'
 'yast' '_yast'
 'yast2' '_yast'
+'yazi' '_yazi'
 'ypbind' '_yp'
 'ypcat' '_yp'
 'ypmatch' '_yp'
@@ -1860,6 +1872,7 @@ _comps=(
 'yum' '_yum'
 'yumdb' '_yum'
 'zargs' '_zargs'
+'zathura' '_zathura'
 'zcalc' '_zcalc'
 '-zcalc-line-' '_zcalc_line'
 'zcat' '_zcat'
@@ -2032,8 +2045,9 @@ bindkey '^[,' _history-complete-newer
 bindkey '^[/' _history-complete-older
 bindkey '^[~' _bash_complete-word
 
-autoload -Uz _dunst _dunstctl _dunstify _eza _gh \
-            _hx _opencode _rg _taplo _xwallpaper \
+autoload -Uz _bat _dunst _dunstctl _dunstify _eza \
+            _gh _hx _mpv _opencode _pulseaudio \
+            _rg _taplo _xwallpaper _yazi _zathura \
             _zoxide _bootctl _busctl _coredumpctl _fastfetch \
             _hostnamectl _journalctl _localectl _loginctl _machinectl \
             _networkctl _nix _nix-build _nix-channel _nix-collect-garbage \
