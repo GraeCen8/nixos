@@ -134,6 +134,7 @@ alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode bypassPermis
 alias d='docker'
 alias r='rails'
 alias vim='nvim'
+alias lg='lazygit'
 
 # nix helpers
 alias hmr='nix run ~/nix#hm.grae.activationPackage'
