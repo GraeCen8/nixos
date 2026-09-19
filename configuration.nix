@@ -11,24 +11,10 @@
   programs.dconf.enable = true;
   environment.sessionVariables.TERMINAL = "st";
   services.displayManager.ly.enable = true;
-  services.xserver = {
-    enable = true;
-    autoRepeatDelay = 200;
-    autoRepeatInterval = 35;
-    # windowManager.qtile.enable = true;
-    windowManager.oxwm.enable = true;
-    displayManager.sessionCommands = ''
-      ${pkgs.xwallpaper}/bin/xwallpaper --zoom /home/grae/nix/walls/wall1.png
-    '';
-    extraConfig = ''
-      	Section "Monitor"
-      	  Identifier "Virtual-1"
-      	  Option "PreferredMode" "1920x1080"
-      	EndSection
-    '';
-  };
-
-  services.picom.enable = true;
+  # Wayland setup; X11 and compositors removed
+  programs.niri.enable = true;
+  services.xserver.enable = false;
+  # If you want a wallpaper, use swaybg/hyprpaper under Wayland or launch from niri exec commands.
 
   # Stop systemd-gpt-auto-generator from using /dev/sda2 as swap
   # (no valid swap filesystem is set up on this VM disk).
