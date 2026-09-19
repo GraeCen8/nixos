@@ -71,20 +71,19 @@ in
     github-cli
     # Apps
     rofi
-    xdotool
-    xwallpaper
-    maim
     imv
     mpv
     cliamp
     localsend
     # Terminal
-    (pkgs.st.overrideAttrs (old: {
-      src = ./config/st;
-      patches = [ ];
-      preBuild = "make clean";
-      buildInputs = old.buildInputs ++ [ pkgs.harfbuzz ];
-    }))
+    alacritty
+    # Wayland apps
+    niri
+    noctalia-shell
+    grim
+    slurp
+    wl-clipboard
+    xwayland-satellite
     # Notification daemon
     dunst
     # Brightness/screen control
