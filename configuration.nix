@@ -9,6 +9,25 @@
   services.upower.enable = true;
   services.power-profiles-daemon.enable = true;
 
+  # upower sees no battery/AC on this machine, so PPD parks in
+  # power-saver (900MHz on this i7-7500U) and everything feels slow.
+  # Force balanced at boot; change live with `powerprofilesctl set <profile>`.
+  systemd.services.set-balanced-power-profile = {
+    description = "Set balanced power profile (PPD defaults to power-saver here)";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "power-profiles-daemon.service" ];
+    serviceConfig.Type = "oneshot";
+    script = "${pkgs.power-profiles-daemon}/bin/powerprofilesctl set balanced";
+  };
+
+  # No swap partition + Chromium-class browser = stalls under memory
+  # pressure. Compressed RAM swap is the standard NixOS answer.
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
+  };
+
   time.timeZone = "Europe/London";
   programs.zsh.enable = true;
   programs.dconf.enable = true;

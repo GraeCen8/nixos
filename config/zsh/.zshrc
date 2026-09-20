@@ -4,7 +4,10 @@
 
 # load modules
 zmodload zsh/complist
-autoload -U compinit && compinit
+# -C skips the compaudit security scan (0.5s+ on NixOS: huge store $fpath).
+# Dump lives in cache, not the repo. Regenerate with: rm ~/.cache/zsh/zcompdump; exec zsh
+[[ -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh" ]] || mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
+autoload -U compinit && compinit -C -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"
 autoload -U colors && colors
 # autoload -U tetris # main attraction of zsh, obviously
 

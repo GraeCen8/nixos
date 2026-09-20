@@ -94,13 +94,14 @@ in
     wl-clipboard
     xwayland-satellite
     # Notification daemon
-    dunst
+    # (dunst removed: noctalia-shell already provides notifications,
+    # and the dunst user service was inactive)
     # Brightness/screen control
     brightnessctl
     # Video processing etc
     ffmpeg
-    # Audio volume tools
-    pulseaudio
+    # Audio volume tools (pipewire service is system-wide;
+    # the standalone pulseaudio package is redundant)
     pipewire
     pamixer
   ];

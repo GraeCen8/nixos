@@ -3,3 +3,5 @@ config/st/*.o
 config/st/hb.o
 config/st/x.o
 config/st/st.o
+# zsh completion dumps are generated artifacts (now in $XDG_CACHE_HOME)
+config/zsh/.zcompdump*
