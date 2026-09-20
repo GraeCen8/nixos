@@ -31,7 +31,7 @@
   time.timeZone = "Europe/London";
   programs.zsh.enable = true;
   programs.dconf.enable = true;
-  environment.sessionVariables.TERMINAL = "st";
+  environment.sessionVariables.TERMINAL = "footclient";
   services.displayManager.ly.enable = true;
   # Wayland setup; X11 and compositors removed
   programs.niri.enable = true;

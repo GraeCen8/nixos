@@ -14,31 +14,31 @@ in
   home.homeDirectory = "/home/grae";
   programs.git = {
     enable = true;
-    extraConfig.credential."https://github.com".helper =
+    settings.credential."https://github.com".helper =
       "!f() { gh auth git-credential \"$@\"; }; f";
   };
   home.stateVersion = "25.05";
 
   home.file.".zshenv".text = "export ZDOTDIR=\"$HOME/.config/zsh\"";
 
-  gtk = {
-    enable = true;
-    colorScheme = "dark";
-    theme = {
-      name = "rose-pine";
-      package = pkgs.rose-pine-gtk-theme;
-    };
-    iconTheme = {
-      name = "rose-pine";
-      package = pkgs.rose-pine-icon-theme;
-    };
-    cursorTheme = {
-      name = "rose-pine-cursor";
-      package = pkgs.rose-pine-cursor;
-      size = 24;
-    };
-    gtk4.theme = config.gtk.theme;
-  };
+  # gtk = {
+  #   enable = true;
+  #   colorScheme = "dark";
+  #   theme = {
+  #     name = "rose-pine";
+  #     package = pkgs.rose-pine-gtk-theme;
+  #   };
+  #   iconTheme = {
+  #     name = "rose-pine";
+  #     package = pkgs.rose-pine-icon-theme;
+  #   };
+  #   cursorTheme = {
+  #     name = "rose-pine-cursor";
+  #     package = pkgs.rose-pine-cursor;
+  #     size = 24;
+  #   };
+  #   gtk4.theme = config.gtk.theme;
+  # };
 
   xdg.configFile = builtins.mapAttrs
     (name: _: {
@@ -75,15 +75,8 @@ in
     mpv
     cliamp
     localsend
-    # Terminal
-    (pkgs.st.overrideAttrs (old: {
-      src = ./config/st;
-      patches = [ ];
-      preBuild = "make clean";
-      buildInputs = old.buildInputs ++ [
-        pkgs.harfbuzz
-      ];
-    }))
+    # Terminal (Wayland native)
+    foot
 
     alacritty
     # Wayland apps
