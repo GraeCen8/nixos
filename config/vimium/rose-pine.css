@@ -1,0 +1,124 @@
+/*
+ * Rose Pine (base) for Vimium
+ *
+ * Palette: https://rosepinetheme.com/palette
+ *   base #191724, surface #1f1d2e, overlay #26233a,
+ *   muted #6e6a86, subtle #908caa, text #e0def4,
+ *   love #eb6f92, gold #f6c177, rose #ebbcba,
+ *   pine #31748f, foam #9ccfd8, iris #c4a7e7,
+ *   highlightLow #21202e, highlightMed #403d52, highlightHigh #524f67
+ *
+ * INSTALL:
+ *   1. Open Helium -> Vimium Options (or visit the Vimium options page).
+ *   2. Scroll to "Advanced options" -> "CSS for Vimium UI".
+ *   3. Enable "Show advanced options" if the box is hidden.
+ *   4. Paste this whole file, save.
+ *
+ * This file is managed by Nix (~nix/config/vimium -> ~/.config/vimium).
+ * Edit the source in the nix repo, rebuild, then re-paste if changed.
+ */
+
+/* ---------- Link hints (press f) ---------- */
+.vimiumHintMarker {
+  background: #f6c177 !important;
+  border: 1px solid #191724 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 2px 8px rgba(25, 23, 36, 0.6) !important;
+  color: #191724 !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+  padding: 1px 4px !important;
+}
+
+.vimiumHintMarker span {
+  color: #191724 !important;
+}
+
+.vimiumHintMarker > .matchingCharacter {
+  color: #31748f !important;
+}
+
+/* ---------- Vomnibar (press o / O / b) ---------- */
+#vomnibarHolder {
+  /* transparent backdrop so the page dims slightly */
+  background: rgba(25, 23, 36, 0.55) !important;
+}
+
+#vomnibarHolder #vomnibar {
+  background: #1f1d2e !important;
+  border: 1px solid #403d52 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55) !important;
+  color: #e0def4 !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  max-height: 70vh !important;
+  padding: 12px !important;
+}
+
+#vomnibarHolder #vomnibar input {
+  background: #26233a !important;
+  border: 1px solid #403d52 !important;
+  border-radius: 8px !important;
+  color: #e0def4 !important;
+  font-size: 16px !important;
+  padding: 8px 12px !important;
+}
+
+#vomnibarHolder #vomnibar input::selection {
+  background: #403d52 !important;
+}
+
+#vomnibarHolder #vomnibar ul {
+  background: #1f1d2e !important;
+  border-top: 1px solid #26233a !important;
+  margin-top: 8px !important;
+  padding: 4px !important;
+}
+
+#vomnibarHolder #vomnibar li {
+  border-bottom: none !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+}
+
+#vomnibarHolder #vomnibar li .vomnibarTitle {
+  color: #e0def4 !important;
+}
+
+#vomnibarHolder #vomnibar li .vomnibarUrl {
+  color: #9ccfd8 !important;
+}
+
+#vomnibarHolder #vomnibar li .vomnibarSource {
+  color: #6e6a86 !important;
+}
+
+#vomnibarHolder #vomnibar li .vomnibarMatch {
+  color: #ebbcba !important;
+  font-weight: bold !important;
+}
+
+#vomnibarHolder #vomnibar li.vomnibarSelected {
+  background: #26233a !important;
+}
+
+#vomnibarHolder #vomnibar li.vomnibarSelected .vomnibarTitle {
+  color: #ebbcba !important;
+}
+
+/* ---------- HUD (e.g. search count, scroll notices) ---------- */
+div.vimiumHUD {
+  background: #1f1d2e !important;
+  border: 1px solid #403d52 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+  color: #e0def4 !important;
+  font-family: "JetBrainsMono Nerd Font", monospace !important;
+  font-size: 13px !important;
+}
+
+div.vimiumHUD span {
+  color: #c4a7e7 !important;
+}
