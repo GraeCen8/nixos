@@ -77,7 +77,7 @@ in
     localsend
     # Terminal
     (pkgs.st.overrideAttrs (old: {
-      src = .config/st;
+      src = ./config/st;
       patches = [ ];
       preBuild = "make clean";
       buildInputs = old.buildInputs ++ [

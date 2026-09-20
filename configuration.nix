@@ -6,6 +6,9 @@
   networking.hostName = "nixos-btw";
   networking.networkmanager.enable = true;
 
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
+
   time.timeZone = "Europe/London";
   programs.zsh.enable = true;
   programs.dconf.enable = true;
