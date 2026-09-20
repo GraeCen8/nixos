@@ -51,12 +51,13 @@
       HomepageIsNewTabPage = true;
       RestoreOnStartup = 4;
       RestoreOnStartupURLs = [ "file:///home/grae/.config/helium/startpage.html" ];
-      ExtensionInstallForcelist = [
-        # Vimium (keyboard navigation)
-        "dbepggeogbaibhgnhhndojpepiihcmeb;https://clients2.google.com/service/update2/crx"
-        # Rose Pine (base) Chrome theme
-        "noimedcjdohhokijigpfcbjcfcaaahej;https://clients2.google.com/service/update2/crx"
-      ];
+      # NOTE: no ExtensionInstallForcelist on purpose. Helium neuters
+      # Google's extension update service (requests get sinkholed to
+      # helium-services-are-disabled.qjz9zk), so force-installed
+      # extensions fail with "no_update_info" and never install
+      # (verified in chrome logs). Extensions are pre-installed
+      # declaratively from pinned local .crx files instead, see
+      # home.nix (vimiumCrx / rosePineCrx + External Extensions JSONs).
     };
   };
 
