@@ -252,6 +252,15 @@ qmk-swap() {
   echo "If keys are swapped/missing, check handedness: the half plugged into USB is the left side by default."
 }
 
+# --- foot OSC 7 shell integration: reports cwd so foot's
+# spawn-terminal (Ctrl+Shift+N) opens the new window in the same dir.
+# (replaces st newterm patch; also passes through tmux, see tmux.conf)
+__foot_osc7() {
+  printf '\e]7;file://%s%s\a' "${HOSTNAME:-$HOST}" "${PWD}"
+}
+precmd_functions+=(__foot_osc7)
+chpwd_functions+=(__foot_osc7)
+
 t() {
   local session
   session="$(basename "$PWD")"

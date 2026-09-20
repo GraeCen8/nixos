@@ -5,8 +5,8 @@
 
 # default programs
 export EDITOR="nvim"
-export TERM="st"
-export TERMINAL="st"
+export TERM="foot"
+export TERMINAL="footclient"
 export MUSPLAYER="termusic"
 export BROWSER="firefox"
 export BROWSER2="librewolf"
