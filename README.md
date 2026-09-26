@@ -96,7 +96,11 @@ Reboot. You now have a working text-mode NixOS with `nixos-rebuild`.
 
 ### 5. Apply this config
 
+The clone from step 1 lived on the installer's RAM-backed root and is gone
+after the reboot. Clone it again on the installed system:
+
 ```
+git clone https://github.com/GraeCen8/nixos.git ~/nix
 cd ~/nix
 sudo nixos-rebuild switch --impure --flake ~/nix#nixos-btw
 ```
