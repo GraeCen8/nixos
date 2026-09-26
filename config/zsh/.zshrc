@@ -140,6 +140,7 @@ alias vim='nvim'
 alias lg='lazygit'
 
 # nix helpers
+# Reboots the system config; see the `nrs` function below for host switching.
 alias hmr='nix run ~/nix#hm.grae.activationPackage'
 
 # --- helpers (ported from fish conf.d/functions-helpers.fish) ---
@@ -158,8 +159,11 @@ eff() {
 
 
 # --- system (ported from fish conf.d/functions-system.fish) ---
+# Rebuild helper. Derives the repo location from this file's own (symlinked)
+# path, so the clone directory does not have to be ~/nix. Pass a :host
+# argument to target a different machine, e.g. `nrs :other-host`.
 nrs() {
-  local flake=/home/grae/nix
+  local flake="${${(%):-%N}:A:h:h:h}"
   local host=nixos-btw
   local args=()
   for arg in "$@"; do
@@ -169,7 +173,10 @@ nrs() {
       args+=("$arg")
     fi
   done
-  noglob bash -c "sudo nixos-rebuild switch --impure ${args[*]} --flake $flake#$host"
+  export DOTFILES_DIR="$flake"
+  # `sudo env`, not a bare export: sudo scrubs the environment, and home.nix
+  # reads DOTFILES_DIR via builtins.getEnv under --impure.
+  noglob bash -c "sudo env DOTFILES_DIR=$flake nixos-rebuild switch --impure ${args[*]} --flake $flake#$host"
 }
 
 qmk-swap() {
@@ -189,7 +196,7 @@ qmk-swap() {
 
   local file="$1"
   [[ -f "$file" ]] || { echo "File not found: $file"; return 1; }
-  command -v qmk >/dev/null || { echo "qmk is not installed yet. Add it to dev-tools.nix and run: sudo nixos-rebuild switch --flake /home/grae/nixos#<host>"; return 1; }
+  command -v qmk >/dev/null || { echo "qmk is not installed yet. Add it to dev-tools.nix and run: nrs"; return 1; }
 
   local qmk_home
   qmk_home="$(qmk config user.qmk_home 2>/dev/null | sed 's/^user\.qmk_home=//')"

@@ -1,7 +1,19 @@
 { config, pkgs, ... }:
 
 let
-  dotfiles = "${config.home.homeDirectory}/nix/config";
+  # Keep in sync with `username` in configuration.nix and `hosts` in flake.nix
+  # when adding a machine.
+  username = "grae";
+
+  # Where this repo is checked out. Defaults to ~/nix so a plain
+  # `git clone ~/nix` works with no extra setup; override with DOTFILES_DIR
+  # if you cloned it elsewhere. The `nrs` shell function exports this
+  # automatically by resolving its own symlinked path.
+  repoDir =
+    let fromEnv = builtins.getEnv "DOTFILES_DIR"; in
+    if fromEnv != "" then fromEnv else "${config.home.homeDirectory}/nix";
+
+  dotfiles = "${repoDir}/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
 
   # Auto-generate from folders in the dotfiles directory
@@ -32,14 +44,24 @@ let
 in
 
 {
-  home.username = "grae";
-  home.homeDirectory = "/home/grae";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
   programs.git = {
     enable = true;
     settings.credential."https://github.com".helper =
       "!f() { gh auth git-credential \"$@\"; }; f";
   };
   home.stateVersion = "25.05";
+
+  assertions = [
+    {
+      assertion = builtins.pathExists dotfiles;
+      message = ''
+        Dotfiles not found at ${dotfiles}.
+        Clone this repo to ~/nix, or set DOTFILES_DIR to its location.
+      '';
+    }
+  ];
 
   home.file.".zshenv".text = "export ZDOTDIR=\"$HOME/.config/zsh\"";
 
@@ -125,6 +147,9 @@ in
     # and the dunst user service was inactive)
     # Brightness/screen control
     brightnessctl
+    # Bound in config/niri/config.kdl (Super+Alt+L lock, XF86Audio* media keys)
+    swaylock
+    playerctl
     # Video processing etc
     ffmpeg
     # Audio volume tools (pipewire service is system-wide;

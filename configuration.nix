@@ -1,7 +1,20 @@
-{ config, lib, pkgs, ... }: {
-  imports = [ ./hardware-configuration.nix ];
+{ config, lib, pkgs, ... }:
+let
+  # Keep in sync with `hosts` in flake.nix when adding a machine.
+  username = "grae";
+in
+{
+  # Filesystems come from ./disko.nix. Bootloader setup is below.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "ahci"
+    "uas"
+    "sd_mod"
+    "rtsx_pci_sdmmc"
+  ];
+  boot.initrd.kernelModules = [ "dm-snapshot" ];
 
   networking.hostName = "nixos-btw";
   networking.networkmanager.enable = true;
@@ -40,6 +53,11 @@
   services.xserver.enable = false;
   # If you want a wallpaper, use swaybg/hyprpaper under Wayland or launch from niri exec commands.
 
+  # Needed on a fresh install: without this the very first `nixos-rebuild` as
+  # a normal user cannot write to /nix and silently falls back to building
+  # everything as root. mkAfter keeps the default "root" entry.
+  nix.settings.trusted-users = lib.mkAfter [ username ];
+
   # Helium browser (Chromium-based) via oxcl/nix-flake-helium-browser.
   # Provides pkgs.helium + programs.helium (flags/policies).
   # Startpage lives at ~/.config/helium/startpage.html (from ./config/helium/).
@@ -49,10 +67,10 @@
       "--ozone-platform-hint=auto"
     ];
     policies = {
-      HomepageLocation = "file:///home/grae/.config/helium/startpage.html";
+      HomepageLocation = "file:///home/${username}/.config/helium/startpage.html";
       HomepageIsNewTabPage = true;
       RestoreOnStartup = 4;
-      RestoreOnStartupURLs = [ "file:///home/grae/.config/helium/startpage.html" ];
+      RestoreOnStartupURLs = [ "file:///home/${username}/.config/helium/startpage.html" ];
       # NOTE: no ExtensionInstallForcelist on purpose. Helium neuters
       # Google's extension update service (requests get sinkholed to
       # helium-services-are-disabled.qjz9zk), so force-installed
@@ -67,7 +85,8 @@
   # (no valid swap filesystem is set up on this VM disk).
   systemd.generators.systemd-gpt-auto-generator = "/dev/null";
 
-  users.users.grae = {
+  # TODO: change this. It is committed in plaintext, so treat it as public.
+  users.users.${username} = {
     isNormalUser = true;
     initialPassword = "qwe";
     shell = pkgs.zsh;
@@ -99,6 +118,13 @@
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  # Was in the old hardware-configuration.nix; needed for Wi-Fi and the
+  # i7-7500U's microcode.
+  hardware.enableRedistributableFirmware = lib.mkDefault true;
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
   system.stateVersion = "25.05";
 }
 
