@@ -58,9 +58,23 @@
       hosts = {
         nixos-btw = mkHost "nixos-btw" "grae";
       };
+
+      # Throwaway minimal system, only used to bootstrap a fresh install from
+      # the install ISO (which has no nixos-rebuild). Not a real host: no
+      # hostname, no home-manager, no desktop. See README.md step 4.
+      bootstrapSystem = nixpkgs.lib.nixosSystem {
+        inherit system;
+        modules = [
+          ./bootstrap.nix
+          ./disko.nix
+          disko.nixosModules.default
+        ];
+      };
     in
     {
-      nixosConfigurations = lib.mapAttrs (_: host: host.nixosSystem) hosts;
+      nixosConfigurations = lib.mapAttrs (_: host: host.nixosSystem) hosts // {
+        bootstrap = bootstrapSystem;
+      };
 
       homeConfigurations = lib.mapAttrs (_: host: host.homeConfiguration) hosts;
 

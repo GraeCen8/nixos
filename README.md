@@ -55,46 +55,23 @@ mounts everything under `/mnt`, so the next step needs no manual mounting.
 **This erases the whole device.** Point `disko.nix` at the wrong disk and you
 lose it. Omit `--mode destroy` if you only want to format and mount.
 
-### 4. Install a minimal system
+### 4. Install a bootstrap system
 
-The installer image has no `nixos-rebuild`, so install a stock single-user
-config first. This deliberately does *not* use this repo yet.
-
-```
-sudo nixos-enter --root /mnt   # or: nixos-install
-```
-
-Inside the chroot:
+The installer has no `nixos-rebuild`, so a minimal system has to be installed
+first. The repo provides one as the `bootstrap` flake output.
 
 ```
-mkdir -p /etc/nixos
-
-# Pick up the real disk UUIDs of the partitions that were just created.
-nixos-generate-config --show-hardware-config > /etc/nixos/hardware-configuration.nix
-
-cat > /etc/nixos/configuration.nix <<'EOF'
-{ ... }: {
-  imports = [
-    <nixpkgs/nixos/modules/profiles/minimal.nix>
-    ./hardware-configuration.nix
-  ];
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.trusted-users = [ "root" "grae" ];
-  users.users.grae = {
-    isNormalUser = true;
-    initialPassword = "change-me";
-    extraGroups = [ "wheel" ];
-  };
-  system.stateVersion = "25.05";
-}
-EOF
-
-nixos-install --flake /etc/nixos#default
+sudo nixos-install --root /mnt --flake ~/nix#bootstrap
 ```
+
+`nixos-install` prompts for a root password, and creates its own chroot — so do
+**not** try `nixos-enter --root /mnt` yourself. That needs an existing NixOS
+installation and reports `/mnt is not a nixos installation` on a freshly
+formatted disk, which is exactly what you have at this point.
 
 Reboot. You now have a working text-mode NixOS with `nixos-rebuild`.
 
-### 5. Apply this config
+### 5. Apply the real config
 
 The clone from step 1 lived on the installer's RAM-backed root and is gone
 after the reboot. Clone it again on the installed system:
@@ -146,6 +123,7 @@ To format the Nix files: `nix fmt`.
 | `flake.nix` | Entry point. `hosts` maps machine name to its NixOS system. |
 | `configuration.nix` | System config: boot, bluetooth, niri/ly, Helium, users, packages. |
 | `disko.nix` | Declarative partition layout, and the target disk. |
+| `bootstrap.nix` | Throwaway minimal system, only for step 4. Replaced by the real config. |
 | `home.nix` | Home Manager: symlinks `config/*` into `~/.config/`, plus user packages. |
 | `config/` | The dotfile tree. One subdirectory per `~/.config` entry. |
 | `walls/` | Wallpapers. Not Nix-managed; referenced by absolute path. |
